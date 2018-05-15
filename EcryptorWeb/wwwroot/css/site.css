@@ -3,6 +3,24 @@
     padding-bottom: 20px;
 }
 
+/* watermark ?? */
+    body::after {
+        content: "";
+        background: url('../images/logo-large.png') no-repeat ;
+        /*background-attachment: fixed;*/
+        background-size: 90%;
+        opacity: 0.15;
+        top: 60px;
+        right: 10%;
+        background-position-x: right;
+        background-position-y: top;
+        position: fixed;
+        z-index: 1030;
+        height: 230px;
+        width: 400px;
+        /*border: dashed;*/
+        display: block;
+    } 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
@@ -32,4 +50,29 @@
     .carousel-caption {
         display: none;
     }
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        background: red;
+        cursor: inherit;
+        display: block;
+    }
+
+input[readonly] {
+    background-color: white !important;
+    cursor: text !important;
 }

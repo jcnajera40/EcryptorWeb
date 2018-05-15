@@ -1,0 +1,210 @@
+﻿@{
+    ViewData["Title"] = "New Request";
+}
+
+<script>
+    // Check for the various File API support.
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        // Great success! All the File APIs are supported.
+    } else {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+</script>
+
+
+<h2>@ViewData["Title"]</h2>
+
+<p> Pickup the document you want to open, or drag the files to the box.</p>
+@*<form asp-action="UploadFiles" id="eCryptorRequestFrm" name="eCryptorRequestFrm" asp-controller="BlobController" method="post" enctype="multipart/form-data">*@
+    <form method="post" enctype="multipart/form-data">
+        <h3 style="color:navy">Request Id:&nbsp;<strong><span id="requestId">@ViewData["Message"]</span></strong></h3>
+        <h4 style="color:dimgrey">Request date:&nbsp;<strong><span id="requestDate">@ViewData["RequestDate"]</span></strong></h4>
+        <h4 style="color:dimgrey">Request location:&nbsp;<strong><span id="requestLocation">Lat:xxx.xxxx, Long:xxx.xxxx</span></strong></h4>
+
+        @*<a href="#"><span class="glyphicon glyphicon-expand"></span></a>*@
+        <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#pnlAdvancedRequestOptions">
+            @*<span class="glyphicon glyphicon-upload"></span>*@
+            <span class="glyphicon glyphicon-expand"></span>
+            Show advanced options
+        </button>
+        <div id="pnlAdvancedRequestOptions" class="collapse">
+            <br />
+            <div id="pnlAdvOptions" name="pnlAdvOptions" class="panel panel-default">
+                <div id="pnlAdvOptionsHeader" name="pnlAdvOptionsHeader" class="panel-heading">Advnced options:</div>
+                <div id="pnlAdvOptionsBody" name="pnlAdvOptionsBody" class="panel-body">Optional request options here</div>
+            </div>
+        </div>
+        <div id="pnlComments" name="pnlComments" class="panel panel-default" style="margin-top:1em;">
+            <div id="pnlCommentsHeader" name="pnlCommentsHeader" class="panel-heading">Comments:</div>
+            <div id="pnlCommentsBody" name="pnlCommentsBody" class="panel-body">
+                <label for="comment">Provide a more details about your request for the record and to share with the document owner upon request:</label>
+                <textarea class="form-control" rows="3" maxlength="255" id="comment" pattern="^[A-Za-z0-9 -\.\_\,]+$" title="Only alphanumeric simple text is allowed."></textarea>
+            </div>
+        </div>
+    
+        <div id="pnlRequestedFiles" name="pnlRequestedFiles" class="panel panel-default">
+            <div id="pnlRequestedFilesHeader" name="pnlRequestedFilesHeader" class="panel-heading">
+                Files incluided in this access request:
+                <span id="selectedFilescount" name="selectedFilescount" class="badge"></span>
+                <span id="selectedFilesTotalSizeBytes" name="selectedFilesTotalSizeBytes" class="badge"></span>
+
+            </div>
+            <div id="pnlRequestedFilesBody" name="pnlRequestedFilesBody" class="panel-body">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <span class="btn btn-primary btn-file">
+                            Browse&hellip; <input type="file" single id="pkFile" name="pkFile" onchange="SelectFiles()" multiple>
+                        </span>
+                    </span>
+                    <input id="txtSelectedFiles" name="txtSelectedFiles" type="text" class="form-control" readonly value="You can drag the files here!" style="font-style:italic;color:darkgrey !Important">
+                </div>
+                <output id="fileList" name="fileList"></output>
+            </div>
+        </div>
+
+        <button id="btnSubmit" name="btnSubmit" type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-upload"></span>
+            Submit Request
+        </button>
+    </form>
+
+    <script>
+        function SelectFiles() {
+            var x = document.getElementById("pkFile");
+            var totalFileSize = 0;
+            var fileSize = 0;
+            var fileName = "";
+            var txt = "";
+            if ('files' in x) {
+                if (x.files.length == 0) {
+                    txt = "Select one or more files.";
+                } else {
+
+                    for (var i = 0; i < x.files.length; i++) {
+                        var file = x.files[i];
+                        if ('name' in file) { fileName = file.name; } else { fileName = ""; }
+                        if ('size' in file) { fileSize = ((file.size / 1024) / 1024); } else { fileSize = 0; }
+                        txt += "<p><span class='badge'>" + (i + 1) + "</span>&nbsp;<span class='list-group-item-text'>" + fileName + "</span>&nbsp;<span class='badge'>" + parseFloat(fileSize).toFixed(2) + "</span>&nbsp;Mb.</p>";
+                        totalFileSize += fileSize;
+                    }
+                }
+            }
+            else {
+                if (x.value == "") {
+                    txt += "Select one or more files.";
+                } else {
+                    txt += "The files property is not supported by your browser!";
+                    txt += "<br>The path of the selected file: " + x.value; // If the browser does not support the files property, it will return the path of the selected file instead.
+                }
+            }
+            document.getElementById("fileList").innerHTML = txt;
+            document.getElementById("selectedFilescount").innerText = x.files.length;
+            document.getElementById("selectedFilesTotalSizeBytes").innerText = parseFloat(totalFileSize).toFixed(2) + " Mb.";
+        }
+
+        function handleFileSelect(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+
+            //var files = evt.dataTransfer.files2upload; // FileList object.
+            var x = evt.dataTransfer.files; // FileList object.
+
+            // files is a FileList of File objects. List some properties.
+            var txt = "";
+            var totalFileSize = 0;
+            var fileSize = 0;
+            var fileName = "";
+
+            for (var i = 0, f; f = x[i]; i++) {
+
+                if ('name' in f) { fileName = f.name; } else { fileName = ""; }
+                if ('size' in f) { fileSize = ((f.size / 1024) / 1024); } else { fileSize = 0; }
+                txt += "<p><span class='badge'>" + (i + 1) + "</span>&nbsp;<span class='list-group-item-text'>" + fileName + "</span>&nbsp;<span class='badge'>" + parseFloat(fileSize).toFixed(2) + "</span>&nbsp;Mb.</p>";
+                totalFileSize += fileSize;
+
+            }
+            document.getElementById("fileList").innerHTML = txt;
+            document.getElementById("selectedFilescount").innerText = x.length;
+            document.getElementById("selectedFilesTotalSizeBytes").innerText = parseFloat(totalFileSize).toFixed(2) + " Mb.";
+        }
+
+        function getLocation() {
+            var x = document.getElementById("requestLocation");
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerText = "Geolocation is not supported by this browser/device.";
+            }
+        }
+
+        function showPosition(position) {
+            var x = document.getElementById("requestLocation");
+            x.innerText = "Lat:" + position.coords.latitude + ", Long:" + position.coords.longitude;
+        }
+
+        function handleDragOver(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        }
+
+        function submitForm() {
+            //document.getElementById("eCryptorRequestFrm").submit();
+            var fileUpload = $("#pkFile").get(0);
+            var files = fileUpload.files;
+            var data = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                data.append(files[i].name, files[i]);
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Blob/UploadFilesAjax",
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function () {
+                    alert('Success!');
+                },
+                error: function () {
+                    alert("There was error uploading files!");
+                }
+            });
+        }
+
+        function parseResponse(rsp) {
+            if (rsp) {
+                document.getElementById("requestId").innerHTML = rsp.EcryptorRequestRowid;
+                
+                document.getElementById("requestDate").innerHTML = rsp.CreationDate;
+
+                rsp.UserRequestorUpn = User.Identity.Name;
+
+                //rsp.UserCountry = "United States";
+                //rsp.UserRegion = "Texas";
+                //rsp.UserCity = "San Antonio";
+                //rsp.UserDpto = "Finance";
+                //rsp.UserJob = "Auditor";
+                //rsp.UserManager = "Ana@modernworkplacedemo.com";
+                //rsp.ResquestStatus = "Created";
+                //rsp.RequestorNotes = "Nome notes from the backend...";
+                //rsp.RequestIsActive = true;
+
+                for (var i = 0, f; f = rsp.UploadedFiles[i]; i++) {
+
+                    txt += "<p><span class='badge'>" + (i + 1) + "</span>&nbsp;<span class='list-group-item-text'>" + rsp.UploadedFiles[i] + "</span>&nbsp;<span class='badge'>+</span>&nbsp;Mb.</p>";
+
+                }
+                //document.getElementById("fileList").innerHTML = txt;
+                document.getElementById("selectedFilescount").innerHTML = x.length;
+                document.getElementById("selectedFilesTotalSizeBytes").innerHTML = parseFloat(totalFileSize).toFixed(2) + " Mb.";
+            }
+        }
+
+        //// Setup the dnd listeners.
+        var dropZone = document.getElementById('pnlRequestedFiles');
+        dropZone.addEventListener('dragover', handleDragOver, false);
+        dropZone.addEventListener('drop', handleFileSelect, false);
+
+        //// setup submit listener.
+        document.getElementById("btnSubmit").addEventListener("click", submitForm, false);
+    </script>

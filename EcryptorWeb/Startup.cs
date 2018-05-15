@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using EcryptorWeb.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcryptorWeb
 {
@@ -34,6 +36,16 @@ namespace EcryptorWeb
             .AddCookie();
 
             services.AddMvc();
+            //var databaseConnectionString = @"server=evisordbsrv.database.windows.net;User ID=jcnajera@evisordbsrv;Password=Juan2017!;database=evisordw";
+            //services.AddDbContext<EcryptorDBContext>(options => options.UseSqlServer(databaseConnectionString));
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +64,7 @@ namespace EcryptorWeb
             app.UseStaticFiles();
 
             app.UseAuthentication();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

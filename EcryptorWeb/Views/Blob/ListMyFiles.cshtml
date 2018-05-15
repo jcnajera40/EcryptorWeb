@@ -1,0 +1,16 @@
+﻿@model Dictionary<string, string>
+@{
+    ViewBag.Title = "Files";
+}
+
+<h2>Authorized files:</h2>
+
+<p>You can download any file by click on its name. The link will be availabe until 24 hours fater the request was posted to the service.</p>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li><a href="@item.Value">@item.Key</a></li>
+    }
+</ul>
+

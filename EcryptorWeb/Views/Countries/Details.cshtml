@@ -1,0 +1,90 @@
+﻿@model EcryptorWeb.Models.Country
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Country</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CountryName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CountryName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CountryCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CountryCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SourceLoadSession)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SourceLoadSession)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SourceLoadDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SourceLoadDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LastChangeDateTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastChangeDateTime)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LastChangeSession)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastChangeSession)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RowVersion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RowVersion)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Workload)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Workload)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Tenant)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Tenant)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EvisordwCorrelationId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EvisordwCorrelationId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TenantRid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TenantRid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkloadRid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkloadRid)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.CountryRid">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

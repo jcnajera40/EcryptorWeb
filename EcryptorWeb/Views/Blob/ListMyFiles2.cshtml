@@ -1,0 +1,181 @@
+﻿@model List<CAuthorizedFile>
+@{
+    ViewBag.Title = "Files";
+}
+
+<h2>Authorized files:</h2>
+<div class="small">
+
+    You can find the authorized files below. Please take into account that your request maynot be processed yet, so allow some time to see the most recent files you request to be decrypted.
+    <br />You can download any individual file on this list by click on its name, or, you can select more than one file and download as a single comppressed file.
+    <br />The files will be available for download up to 24 hours after your request was approved.
+
+</div>
+<div id="alertDiv" name="alertDiv">
+</div>
+<form id="frmMain" name="frmMain" method="post" class="form-horizontal" onsubmit="return validateForm()">
+    <div class="table-responsive">
+        <table class="table table-hover table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th><input id="chkDownloadAll" name="chkDownloadAll" type="checkbox" data-toggle="tooltip" title="Select all." /> </th>
+                    <th>#</th>
+                    <th>File</th>
+                    <th>Modified</th>
+                    <th>Request</th>
+                    <th>Granted rights</th>
+                    <th>Due days</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in @Model)
+                {
+                    <tr>
+                        <td><input id="@item.InternalFileName" name="dwnldFile[]" type="checkbox" /> </td>
+                        <th scope="row">@item.Id</th>
+                        <td style="white-space:nowrap;">
+                            <a href="@item.URI" download="@item.OriginalFileName">@item.OriginalFileName</a>
+                            <span id="fileSize" name="fileSize[]" class="badge">@item.SizeFormated</span>
+                        </td>
+                        <td style="white-space:nowrap;">@item.LastChangeDateTime</td>
+                        <td style="white-space:nowrap;">@item.RequestID</td>
+                        <td>@item.DocumentGrantedRights</td>
+                        <td style="white-space:nowrap;">
+                            <span id="policyDue" name="policyDue[]" class="badge" data-toggle="tooltip" title="The adHoc policy used to authorize you to open this file will expire on:&nbsp;@item.PolicyDueDate">@item.AdhocPolicyRemainingDays</span>
+                        </td>
+
+                        @*<td>
+                                <a data-value="@item.Id"
+                                   href="javascript:void(0)" class="btnEdit">Edit</a>
+                            </td>*@
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
+        <input id="downloadFileName" name="downloadFileName" type="text" pattern="^(?!^(PRN|AUX|CLOCK\$|NUL|CON|COM\d|LPT\d|\..*)(\..+)?$)[^\x00-\x1f\\?*:\';|/]+$" class="form-control" placeholder="Enter the name of the zip file">
+        <div class="input-group-btn">
+            <button id="btnDownloadMultiple" name="btnDownloadMultiple" type="button" class="btn btn-primary">
+                <span class="glyphicon glyphicon-download"></span>
+                Download all the selected files as a ZIP
+            </button>
+        </div>
+    </div>
+</form>
+
+<script>
+    function submitForm() {
+        //var form = document.forms['frmMain'];
+        var response = "";
+        var alertDiv = document.getElementById("alertDiv");
+        var zipFileName = document.forms["frmMain"]["downloadFileName"].value;
+        if (fileNameIsValid(zipFileName)) {
+            var files = document.forms['frmMain'].elements['dwnldFile[]'];
+            var data = new FormData();
+            data.append('zipFileName',zipFileName);
+            var selectedFileList = '';
+            for (var i = 0, len = files.length; i < len; i++) {
+                if (files[i].checked) {
+                    selectedFileList += files[i].id + '|';
+                }
+            }
+            data.append('selectedFiles', selectedFileList);
+            $.ajax({
+                type: "POST",
+                url: "/Blob/RequestDownloadMultipleFilesAsZip2",
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function (result) {
+
+                    response = '<div class="alert alert-success alert-dismissible">';
+                    response += '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+                    response += '<strong>Success!</strong>&nbsp;';
+                    response += result;
+                    response += '</div>';
+                    // show the feedback message
+                    alertDiv.innerHTML = response;
+
+                    // go get it!!!
+                    var downloadUrl = '@Url.Action("DownloadMultipleFilesAsZip2", "Blob")';
+                    window.location = downloadUrl + "?downloadRequestIDSubmmitted=" + result;
+                    //var frameWindow = getIFrameWindow("fileWindow");
+                    //frameWindow.document.open();
+                    //frameWindow.document.write(result);
+                    //frameWindow.document.close();
+
+                        },
+                error: function (result) {
+
+                            response = '<div id="alert" name="alert" class="alert alert-danger alert-dismissible">';
+                            response += '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+                            response += '<strong>Error!</strong>&nbsp;';
+                            if (result == "ERR_NO_FILE_SELECTED") {
+                                response += 'No file has been selected. Please select the file(s) you want to download and try again.';
+                            }
+                            response += '</div>';
+                            // show the feedback message
+                            alertDiv.innerHTML = response;
+                        }
+                    });
+        }
+        else {
+
+            response = '<div id="alert" name="alert" class="alert alert-warning alert-dismissible">';
+            response += '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+            response += '<strong>Warning!</strong>&nbsp;The request could not be submited because the zip file is not a valid file name. Please enter a valid file name or keep the field blank.';
+            response += '</div>';
+            // show the feedback message
+            alertDiv.innerHTML = response;
+        }
+    }
+
+    function getIFrameWindow(tempName) {
+        // Remove the old iframe
+        var oldIFrame = document.getElementById("fileFrame");
+        if (oldIFrame) {
+            document.body.removeChild(oldIFrame);
+        }
+        // Create a new iframe
+        createFrame(tempName);
+        var wnd = window.frames["fileFrame"];
+        return wnd;
+    }
+
+    function createFrame(tempName) {
+        var frame = document.createElement("iframe");
+        frame.name = "fileFrame";
+        frame.id = "fileFrame";
+        frame.style.width = "0px";
+        frame.style.height = "0px";
+        frame.style.border = "0px";
+
+        document.body.appendChild(frame);
+    }
+
+
+    function fileNameIsValid(x) {
+        var rsp = true;
+        if (x != "") {
+            // define regex expr
+            //var re = /^(?!^(PRN|AUX|CLOCK\$|NUL|CON|COM\d|LPT\d|\..\*\@@)(\..+)?$)[^\x00-\x1f\\?*:\';|/]+$/gi;
+            //var re = /^(?!^(PRN|AUX|CLOCK\$|NUL|CON|COM\d|LPT\d|\..\*)([a-zA-Z0-9\.\_\-])(\..+)?$)[^\x00-\x1f\\?*:\';|/]+$/gi;
+           // var re = /^(?!^(PRN|AUX|CLOCK\$|NUL|CON|COM\d|LPT\d|\..\*)([a-zA-Z0-9\.\_\-]))+$/gi;
+
+           // var re = /^(?:[\w]\:|\\)(\\[a - z_\-\s0 - 9\.] +)+\.(sip)$/gi;
+           // rsp = re.test(x);
+        }
+        return rsp;
+    } 
+
+    //// setup submit listener.
+    document.getElementById("btnDownloadMultiple").addEventListener("click", submitForm, false);
+
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+</script>

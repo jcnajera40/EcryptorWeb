@@ -1,0 +1,101 @@
+﻿@model IEnumerable<EcryptorWeb.Models.Country>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CountryName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CountryCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SourceLoadSession)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SourceLoadDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastChangeDateTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastChangeSession)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RowVersion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Workload)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tenant)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EvisordwCorrelationId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TenantRid)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.WorkloadRid)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CountryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CountryCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SourceLoadSession)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SourceLoadDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastChangeDateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastChangeSession)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RowVersion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Workload)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tenant)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EvisordwCorrelationId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenantRid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkloadRid)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CountryRid">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CountryRid">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CountryRid">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

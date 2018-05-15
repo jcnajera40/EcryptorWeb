@@ -2,14 +2,47 @@
 
 @if (User.Identity.IsAuthenticated)
 {
+    <ul class="nav navbar-nav">
+        @*<li><a asp-area="" asp-controller="Home" asp-action="index">Home</a></li>*@
+        @*<li><a asp-area="" asp-controller="Test" asp-action="Test2">Test</a></li>*@
+
+        <li><a asp-area="" asp-controller="Blob" asp-action="EcryptorRequest">New</a></li>
+        <li><a asp-area="" asp-controller="" asp-action="">Requests Status</a></li>
+        @*<li><a asp-area="" asp-controller="Blob" asp-action="ListMyFiles">My Files</a></li>*@
+        <li><a asp-area="" asp-controller="Blob" asp-action="ListMyFiles2">Files</a></li>
+        @*<li><a asp-area="" asp-controller="Home" asp-action="Shared">Shared</a></li>*@
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <span class="glyphicon glyphicon-cogwheels"></span>
+                Options
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a asp-area="" asp-controller="Home" asp-action="Reports">Reports</a></li>
+            </ul>
+        </li>
+    </ul>
     <ul class="nav navbar-nav navbar-right">
-        <li class="navbar-text">Hello @User.Identity.Name!</li>
-        <li><a asp-area="" asp-controller="Account" asp-action="SignOut">Sign out</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <span class="glyphicon glyphicon-user" />&nbsp;@User.Identity.Name<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                <li>---------------------------------</li>
+                <li><a asp-area="" asp-controller="Account" asp-action="SignOut"><span class="glyphicon glyphicon-log-out" />&nbsp;Sign out</a></li>
+            </ul>
+        </li>
     </ul>
 }
 else
 {
+    <ul class="nav navbar-nav">
+        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+    </ul>
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Account" asp-action="Signin">Sign in</a></li>
+        <li><a asp-area="" asp-controller="Account" asp-action="Signin"><span class="glyphicon glyphicon-log-in" />&nbsp;Sign in</a></li>
     </ul>
 }

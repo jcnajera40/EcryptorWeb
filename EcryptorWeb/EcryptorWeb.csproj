@@ -7,12 +7,69 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Countries\**" />
+    <Compile Remove="Views\Test\**" />
+    <Content Remove="Views\Countries\**" />
+    <Content Remove="Views\Test\**" />
+    <EmbeddedResource Remove="Views\Countries\**" />
+    <EmbeddedResource Remove="Views\Test\**" />
+    <None Remove="Views\Countries\**" />
+    <None Remove="Views\Test\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\CountriesController.cs" />
+    <Compile Remove="Controllers\EcryptorRequestsController.cs" />
+    <Compile Remove="Controllers\TestController.cs" />
+    <Compile Remove="Models\AipTemplateAllowedIdentities.cs" />
+    <Compile Remove="Models\AipTemplateScopedIdentities.cs" />
+    <Compile Remove="Models\City.cs" />
+    <Compile Remove="Models\ClassificationAndProtection.cs" />
+    <Compile Remove="Models\Country.cs" />
+    <Compile Remove="Models\Department.cs" />
+    <Compile Remove="Models\EcryptorDBContext.cs" />
+    <Compile Remove="Models\EcryptorRequest.cs" />
+    <Compile Remove="Models\File.cs" />
+    <Compile Remove="Models\FileAipStatus.cs" />
+    <Compile Remove="Models\FileLocation.cs" />
+    <Compile Remove="Models\FileType.cs" />
+    <Compile Remove="Models\JobTitle.cs" />
+    <Compile Remove="Models\User.cs" />
+    <Compile Remove="Models\UserGroup.cs" />
+    <Compile Remove="Models\UserGroupMember.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Blob\CreateInboxBlobContainer.cshtml" />
+    <Content Remove="Views\Blob\ListMyFiles.cshtml" />
+    <Content Remove="Views\Home\Shared.cshtml" />
+    <Content Remove="wwwroot\images\banner1.svg" />
+    <Content Remove="wwwroot\images\banner2.svg" />
+    <Content Remove="wwwroot\images\banner3.svg" />
+    <Content Remove="wwwroot\images\banner4.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
+    <PackageReference Include="WindowsAzure.Storage" Version="8.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\css\site.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

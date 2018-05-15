@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Test";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@ViewData["Message"]</h3>
+
+<p>Testing, testing, 123....</p>
+@*<form asp-action="UploadFiles"
+      asp-controller="Home"
+      method="post"
+      enctype="multipart/form-data">
+    <input type="file" name="files" multiple />
+    <input type="submit" value="Upload Selected Files" />
+</form>*@
+
+<form method="post" enctype="multipart/form-data">
+    <input type="file" id="files"
+           name="files" multiple />
+    <input type="button"
+           id="upload"
+           value="Upload Selected Files" onclick="doSubmit();"/>
+</form>
+
+<script>
+    function doSubmit() {
+        var fileUpload = $("#files").get(0);
+        var files = fileUpload.files;
+        var data = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            data.append(files[i].name, files[i]);
+        }
+        $.ajax({
+            type: "POST",
+            url: "/test/UploadFilesAjax",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (message) {
+                alert(message);
+            },
+            error: function () {
+                alert("There was error uploading files!");
+            }
+        });
+    }
+</script>

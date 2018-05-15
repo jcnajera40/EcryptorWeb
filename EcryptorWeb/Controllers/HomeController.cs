@@ -17,16 +17,32 @@ namespace EcryptorWeb.Controllers
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult Shared()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "Shared resources";
 
             return View();
         }
 
+        public IActionResult Reports()
+        {
+            ViewData["Message"] = "Reports for E-Cryptor";
+
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult About()
+        {
+            ViewData["Message"] = "E-Cryptor.";
+
+            return View();
+        }
+
+        [AllowAnonymous]
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "Synergy Advisors LLC.";
 
             return View();
         }
